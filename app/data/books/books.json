@@ -22,5 +22,17 @@
     "itemName": "bob",
     "itemsTitleUz": "Boblar",
     "totalItems": 21
+  },
+  {
+    "id": "tahajjud",
+    "nameUz": "Tahajjud va uni osonlashtiruvchi sabablar",
+    "nameArabic": "الأمور الميسرة لقيام الليل",
+    "subtitleUz": "Tungi namoz haqida risola",
+    "authorUz": "Vahid ibn Abdussalom Baliy",
+    "descriptionUz": "Shayx Vahid ibn Abdussalom Baliyning «Al-umurul muyassiro li-qiyamil-layl» risolasi. Tahajjudning fazilatlari, shaytonning undan toʻsish hiylalari va ularni yengish yoʻllari, salaf solihlarning tungi namozlaridan misollar, tahajjud odoblari hamda uni yengillashtiruvchi zohiriy va botiniy ishlar bayon qilingan.",
+    "noteUz": "Oʻzbekcha tarjima: Yahyo Abdulloh (2024). Matn kitobning kirill yozuvidagi nashridan lotin yozuviga oʻgirilgan. Oyatlarning arabcha matni ilovadagi Qurʼon matnidan olingan.",
+    "itemName": "bob",
+    "itemsTitleUz": "Boblar",
+    "totalItems": 10
   }
 ]

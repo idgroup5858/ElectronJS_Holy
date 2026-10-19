@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<title>Новая вкладка — Профиль 1: Microsoft&#8203; Edge</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #333; }
+  body { font: 12px 'Segoe UI', sans-serif; color: #fff; user-select: none; position: relative; }
+  img { display: block; position: absolute; pointer-events: none; }
+  button { all: unset; position: absolute; border-radius: 4px; -webkit-app-region: no-drag; }
+  button:hover { background: rgba(255, 255, 255, 0.07); }
+  button:active { background: rgba(255, 255, 255, 0.04); }
+
+  /* tab strip */
+  #strip { position: absolute; left: 0; top: 0; right: 0; height: 39px; background: #000; -webkit-app-region: drag; }
+  #tab-actions { left: 4px; top: 4px; width: 32px; height: 30px; border-radius: 6px; background: #1f1f1f; }
+  #tab-actions:hover { background: #2b2b2b; }
+  #tab { position: absolute; left: 40px; top: 3px; width: 240px; height: 36px; background: #333; border-radius: 8px 8px 0 0; -webkit-app-region: no-drag; }
+  #tab::before, #tab::after { content: ''; position: absolute; bottom: 0; width: 8px; height: 8px; }
+  #tab::before { left: -8px; background: radial-gradient(circle at 0 0, transparent 7.5px, #333 8.5px); }
+  #tab::after { right: -8px; background: radial-gradient(circle at 100% 0, transparent 7.5px, #333 8.5px); }
+  #tab-title { position: absolute; left: 33px; top: 8px; width: 170px; line-height: 16px; white-space: nowrap; overflow: hidden; }
+  #tab-close { left: 214px; top: 6px; width: 20px; height: 20px; }
+  #new-tab { left: 284px; top: 4px; width: 32px; height: 30px; border-radius: 6px; }
+
+  /* toolbar + favorites bar */
+  .tb { top: 43px; width: 36px; height: 32px; }
+  #back { left: 2px; } #back img { opacity: 1; }
+  #refresh { left: 38px; }
+  #omnibox { position: absolute; left: 75px; right: 204px; top: 42px; height: 34px; border-radius: 17px;
+             background: #242424; border: 2px solid transparent; }
+  #omnibox.focus { border-color: #235ccf; }
+  #omnibox input { all: unset; position: absolute; left: 31px; right: 14px; top: 0; height: 30px;
+                   font: 14px 'Segoe UI', sans-serif; color: #fff; caret-color: #fff; }
+  #fav-star { right: 167px; }
+  #avatar { right: 130px; }
+  #more { right: 95px; }
+  #copilot { right: 28px; top: 43px; width: 65px; height: 32px; border-radius: 16px 0 0 16px; background: #3f3f3f; }
+  #copilot:hover { background: #3f3f3f; }
+  #copilot:hover::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: rgba(255, 255, 255, 0.06); }
+  #copilot span { position: absolute; left: 37px; top: 7px; line-height: 16px; }
+  #copilot-more { right: 4px; top: 43px; width: 24px; height: 32px; }
+  #fav-left { left: 4px; top: 81px; width: 32px; height: 28px; }
+  #fav-import { left: 48px; top: 81px; width: 150px; height: 28px; }
+  #fav-import span { position: absolute; left: 30px; top: 5px; line-height: 16px; }
+  #fav-sep { position: absolute; left: 208px; top: 87px; width: 1px; height: 16px; background: #7a7a7a; }
+  #fav-msg { position: absolute; left: 224px; right: 8px; top: 86px; line-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #fav-msg a { color: #a7c9fc; font-weight: 600; text-decoration: underline; cursor: pointer; }
+
+  /* new tab page */
+  #page { position: absolute; left: 3px; top: 112px; right: 3px; bottom: 3px; border: 1px solid #3f3f3f; border-radius: 8px;
+          overflow: hidden; background: #1c1a26 center / cover no-repeat; font-family: 'Segoe UI', sans-serif; }
+  #page::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+                  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.15) 320px, rgba(0, 0, 0, 0) 60%); }
+  #page button:hover { background: rgba(255, 255, 255, 0.1); }
+  #waffle { left: 24px; top: 23px; width: 40px; height: 40px; }
+  #pencil { right: 154px; top: 23px; width: 40px; height: 40px; }
+  #gear { right: 114px; top: 23px; width: 40px; height: 40px; }
+  #page svg { position: absolute; left: 10px; top: 10px; width: 20px; height: 20px; fill: #fff; }
+  #signin { right: 24px; top: 24px; width: 82px; height: 37px; border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.04); text-align: center; line-height: 35px; font-size: 14px; }
+  #search { position: absolute; left: 50%; top: 78px; width: 800px; margin-left: -400px; height: 56px; border-radius: 24px;
+            background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14); }
+  #search svg { left: 12px; top: 16px; width: 24px; height: 24px; fill: #707070; }
+  #search input { all: unset; position: absolute; left: 51px; right: 20px; top: 0; height: 54px;
+                  font: 16px 'Segoe UI', sans-serif; color: #1a1a1a; }
+  #search input::placeholder { color: #6b6b6b; }
+  #quick { position: absolute; left: 50%; top: 143px; width: 765px; margin-left: -382px; display: flex; }
+  .ql { all: unset; position: relative; width: 85px; height: 60px; cursor: pointer; -webkit-app-region: no-drag; }
+  .ql .tile { position: absolute; left: 24px; top: 0; width: 36px; height: 36px; border-radius: 12px; background: #4a4a4a; overflow: hidden; }
+  .ql .tile img { left: 4px; top: 4px; width: 28px; height: 28px; }
+  .ql:hover .tile::after { content: ''; position: absolute; inset: 0; background: rgba(255, 255, 255, 0.1); }
+  .ql span { position: absolute; left: 0; right: 0; top: 38px; text-align: center; line-height: 16px; font-size: 12px;
+             white-space: nowrap; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.6); }
+</style>
+</head>
+<body>
+  <div id="strip">
+    <button id="tab-actions"><img src="img/tab-actions.png" srcset="img/tab-actions.png 1x, img/tab-actions@2x.png 2x" style="left:8px;top:8px;width:16px;height:16px"></button>
+    <div id="tab">
+      <img src="img/tab-favicon.png" srcset="img/tab-favicon.png 1x, img/tab-favicon@2x.png 2x" style="left:8px;top:8px;width:16px;height:16px">
+      <div id="tab-title">Новая вкладка</div>
+      <button id="tab-close" data-act="close"><img src="img/tab-close.png" srcset="img/tab-close.png 1x, img/tab-close@2x.png 2x" style="left:2px;top:2px;width:16px;height:16px"></button>
+    </div>
+    <button id="new-tab" data-act="edge"><img src="img/new-tab.png" srcset="img/new-tab.png 1x, img/new-tab@2x.png 2x" style="left:6px;top:5px;width:20px;height:20px"></button>
+  </div>
+
+  <button id="back" class="tb"><img src="img/back.png" srcset="img/back.png 1x, img/back@2x.png 2x" style="left:8px;top:6px;width:20px;height:20px"></button>
+  <button id="refresh" class="tb" data-act="reload"><img src="img/refresh.png" srcset="img/refresh.png 1x, img/refresh@2x.png 2x" style="left:8px;top:6px;width:20px;height:20px"></button>
+  <div id="omnibox" class="focus">
+    <img src="img/omni-search.png" srcset="img/omni-search.png 1x, img/omni-search@2x.png 2x" style="left:7px;top:7px;width:16px;height:16px">
+    <input id="omni" type="text" spellcheck="false" autocomplete="off" autofocus>
+  </div>
+  <button id="fav-star" class="tb"><img src="img/fav-star.png" srcset="img/fav-star.png 1x, img/fav-star@2x.png 2x" style="left:8px;top:6px;width:20px;height:20px"></button>
+  <button id="avatar" class="tb"><img src="img/avatar.png" srcset="img/avatar.png 1x, img/avatar@2x.png 2x" style="left:3px;top:1px;width:30px;height:30px"></button>
+  <button id="more" class="tb"><img src="img/more.png" srcset="img/more.png 1x, img/more@2x.png 2x" style="left:8px;top:6px;width:20px;height:20px"></button>
+  <button id="copilot"><img src="img/copilot-logo.png" srcset="img/copilot-logo.png 1x, img/copilot-logo@2x.png 2x" style="left:5px;top:6px;width:24px;height:24px"><span>Чат</span></button>
+  <button id="copilot-more"><img src="img/copilot-chevron.png" style="left:4px;top:9px;width:16px;height:16px"></button>
+
+  <button id="fav-left"><img src="img/fav-left.png" srcset="img/fav-left.png 1x, img/fav-left@2x.png 2x" style="left:6px;top:4px;width:20px;height:20px"></button>
+  <button id="fav-import"><img src="img/fav-import.png" srcset="img/fav-import.png 1x, img/fav-import@2x.png 2x" style="left:6px;top:4px;width:20px;height:20px"><span>Импорт избранного</span></button>
+  <div id="fav-sep"></div>
+  <div id="fav-msg">Для быстрого доступа поместите избранные элементы на панель "Избранное". <a>Управление избранным</a></div>
+
+  <div id="page">
+    <button id="waffle"><svg viewBox="0 0 20 20"><g><circle cx="3" cy="3" r="1.6"/><circle cx="10" cy="3" r="1.6"/><circle cx="17" cy="3" r="1.6"/><circle cx="3" cy="10" r="1.6"/><circle cx="10" cy="10" r="1.6"/><circle cx="17" cy="10" r="1.6"/><circle cx="3" cy="17" r="1.6"/><circle cx="10" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/></g></svg></button>
+    <button id="pencil"><svg viewBox="0 0 24 24"><path d="M20.95 3.05a3.58 3.58 0 0 0-5.06 0L3.94 15c-.4.4-.7.92-.82 1.48l-1.1 4.6a.75.75 0 0 0 .9.9l4.6-1.1A3.1 3.1 0 0 0 9 20.07L20.95 8.11a3.58 3.58 0 0 0 0-5.06Zm-4 1.06a2.08 2.08 0 1 1 2.94 2.94l-.89.89L16.06 5l.9-.9ZM15 6.06 17.94 9l-10 10a1.6 1.6 0 0 1-.76.43l-3.42.8.82-3.4c.06-.3.21-.56.42-.77l10-10Z"/></svg></button>
+    <button id="gear"><svg viewBox="0 0 24 24"><path d="M12.01 2.25c.74 0 1.47.1 2.18.25.32.07.55.33.59.65l.17 1.53a1.38 1.38 0 0 0 1.92 1.11l1.4-.61c.3-.13.64-.06.85.17a9.8 9.8 0 0 1 2.2 3.8c.1.3 0 .63-.26.82l-1.25.92a1.38 1.38 0 0 0 0 2.22l1.25.92c.26.19.36.52.27.82a9.8 9.8 0 0 1-2.2 3.8.75.75 0 0 1-.85.17l-1.4-.62a1.38 1.38 0 0 0-1.93 1.12l-.17 1.52a.75.75 0 0 1-.58.65 9.52 9.52 0 0 1-4.4 0 .75.75 0 0 1-.57-.65l-.17-1.52a1.38 1.38 0 0 0-1.93-1.11l-1.4.62a.75.75 0 0 1-.85-.18 9.8 9.8 0 0 1-2.2-3.8c-.1-.3 0-.63.26-.82l1.25-.92a1.38 1.38 0 0 0 0-2.22l-1.24-.92a.75.75 0 0 1-.28-.82 9.8 9.8 0 0 1 2.2-3.8c.23-.23.57-.3.86-.17l1.4.62c.4.17.86.15 1.25-.08.38-.22.63-.6.68-1.04l.17-1.53a.75.75 0 0 1 .58-.65c.72-.16 1.45-.24 2.2-.25Zm0 1.5c-.45 0-.9.04-1.35.12l-.11.97a2.89 2.89 0 0 1-4.03 2.33l-.9-.4A8.3 8.3 0 0 0 4.29 9.1l.8.59a2.88 2.88 0 0 1 0 4.64l-.8.59a8.3 8.3 0 0 0 1.35 2.32l.9-.4a2.88 2.88 0 0 1 4.02 2.32l.1.99c.9.15 1.8.15 2.7 0l.1-.99a2.88 2.88 0 0 1 4.02-2.32l.9.4a8.3 8.3 0 0 0 1.35-2.32l-.8-.59a2.88 2.88 0 0 1 0-4.64l.8-.59a8.3 8.3 0 0 0-1.35-2.32l-.9.4a2.88 2.88 0 0 1-4.02-2.32l-.1-.98c-.45-.08-.9-.11-1.34-.12ZM12 8.25a3.75 3.75 0 1 1 0 7.5 3.75 3.75 0 0 1 0-7.5Zm0 1.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z"/></svg></button>
+    <button id="signin">Sign in</button>
+
+    <div id="search">
+      <svg viewBox="0 0 24 24"><path d="M15.1 16.16a8 8 0 1 1 1.06-1.06l4.62 4.62a.75.75 0 1 1-1.06 1.06l-4.62-4.62ZM16.5 10a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg>
+      <input id="ntp-search" type="text" placeholder="Search the web" spellcheck="false" autocomplete="off">
+    </div>
+
+    <div id="quick"></div>
+  </div>
+
+<script>
+  const QUICK = [
+    ['m365', 'Microsoft 365', 'https://www.microsoft365.com/', true],
+    ['booking', 'Booking.com', 'https://www.booking.com/', true],
+    ['kayak', 'Kayak', 'https://www.kayak.com/', true],
+    ['ebay', 'eBay', 'https://www.ebay.com/', false],
+    ['aliexpress', 'AliExpress', 'https://www.aliexpress.com/', false],
+    ['facebook', 'Facebook', 'https://www.facebook.com/', true],
+    ['outlook', 'Outlook', 'https://outlook.live.com/', true],
+    ['linkedin', 'Linkedin', 'https://www.linkedin.com/', false],
+    ['add', 'Add shortcut', null, true],
+  ]
+  const quick = document.getElementById('quick')
+  for (const [id, label, url, has2x] of QUICK) {
+    const el = document.createElement('button')
+    el.className = 'ql'
+    const src = `img/ql-${id}.png`
+    el.innerHTML = `<div class="tile"><img src="${src}" ${has2x ? `srcset="${src} 1x, img/ql-${id}@2x.png 2x"` : ''}></div><span>${label}</span>`
+    if (url) el.addEventListener('click', () => window.decoy.navigate(url))
+    quick.appendChild(el)
+  }
+
+  // har ochilganda 10 ta Edge fon rasmidan biri tasodifiy tanlanadi
+  document.getElementById('page').style.backgroundImage = `url('img/bg${1 + Math.floor(Math.random() * 10)}.jpg')`
+
+  // 3 ta probel + Enter → Qur'on, boshqa matn → haqiqiy Edge
+  function submit(value) {
+    if (value === '   ') return window.decoy.openApp()
+    if (value.trim()) window.decoy.navigate(value.trim())
+  }
+  for (const id of ['omni', 'ntp-search']) {
+    document.getElementById(id).addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submit(e.target.value)
+    })
+  }
+
+  const omni = document.getElementById('omni')
+  const omnibox = document.getElementById('omnibox')
+  omni.addEventListener('focus', () => omnibox.classList.add('focus'))
+  omni.addEventListener('blur', () => omnibox.classList.remove('focus'))
+  omnibox.addEventListener('mousedown', (e) => { if (e.target !== omni) { e.preventDefault(); omni.focus() } })
+  window.addEventListener('load', () => omni.focus())
+
+  document.addEventListener('click', (e) => {
+    const act = e.target.closest('[data-act]')?.dataset.act
+    if (act === 'close') window.decoy.close()
+    if (act === 'edge') window.decoy.navigate('')
+    if (act === 'reload') location.reload()
+  })
+</script>
+</body>
+</html>

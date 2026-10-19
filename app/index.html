@@ -35,9 +35,20 @@
           }
         }
       } catch {}
+      /* Mavzu (Sozlamalar → Mavzu, src/lib/appearance.js) — birinchi chizishdanoq */
+      try {
+        const css = localStorage.getItem('appearance-css')
+        if (css) {
+          const style = document.createElement('style')
+          style.id = 'appearance'
+          style.textContent = css
+          document.head.appendChild(style)
+          document.documentElement.setAttribute('data-appearance', '')
+        }
+      } catch {}
     </script>
-    <script type="module" crossorigin src="/assets/index-1T66ikr2.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BvsVIpSQ.css">
+    <script type="module" crossorigin src="/assets/index-BjkuHIH9.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DKk9Eyx4.css">
   </head>
   <body>
     <div id="root"></div>

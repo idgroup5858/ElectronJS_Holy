@@ -13,7 +13,14 @@ if (!fs.existsSync(REACT_DIR)) {
 
 console.log(`React ilovasi build qilinmoqda: ${REACT_DIR}`)
 const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm'
-execFileSync(npmCmd, ['run', 'build'], { cwd: REACT_DIR, stdio: 'inherit', shell: true })
+// ELECTRON_BUILD=1 — vite.config.js shu bayroqqa qarab bazani '/ReactJS_Holy/'
+// (GitHub Pages uchun) emas, '/' (Electron'ning app:// protokoli uchun) qiladi
+execFileSync(npmCmd, ['run', 'build'], {
+  cwd: REACT_DIR,
+  stdio: 'inherit',
+  shell: true,
+  env: { ...process.env, ELECTRON_BUILD: '1' },
+})
 
 if (!fs.existsSync(REACT_DIST)) {
   console.error(`Build natijasi topilmadi: ${REACT_DIST}`)

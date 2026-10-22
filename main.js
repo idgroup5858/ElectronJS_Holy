@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, protocol, net, shell, ipcMain } = require('electron')
+const { app, BrowserWindow, Menu, protocol, net, shell, ipcMain, session } = require('electron')
 const path = require('node:path')
 const fs = require('node:fs')
 const { spawn } = require('node:child_process')
@@ -37,7 +37,7 @@ function resolveFilePath(pathname) {
   return filePath
 }
 
-function createWindow(bounds = {}) {
+function createWindow(bounds = {}, onReady) {
   const win = new BrowserWindow({
     width: 1280,
     height: 860,
@@ -48,6 +48,7 @@ function createWindow(bounds = {}) {
     title: APP_TITLE,
     backgroundColor: '#0f1012',
     autoHideMenuBar: true,
+    show: false,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -57,7 +58,14 @@ function createWindow(bounds = {}) {
 
   win.setMenuBarVisibility(false)
   win.on('page-title-updated', (event) => event.preventDefault())
-  win.loadURL('app://holy/')
+  // Kontent chizilmaguncha oyna ko'rsatilmaydi — decoy bilan almashinuvda bo'sh freym ko'rinmasligi uchun
+  win.once('ready-to-show', () => {
+    win.show()
+    onReady?.()
+  })
+  // React ilovasining o'z ichidagi Edge niqobi (Decoy.jsx) o'tkazib yuborilsin —
+  // bu oyna faqat tashqi decoy'da parol kiritilgandan keyingina yaratiladi
+  win.loadURL('app://holy/?unlocked=1')
 
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (url.startsWith('http:') || url.startsWith('https:')) {
@@ -112,9 +120,8 @@ function openInRealEdge(input) {
 ipcMain.on('decoy:open-app', (event) => {
   const decoy = BrowserWindow.fromWebContents(event.sender)
   const maximized = decoy.isMaximized()
-  const win = createWindow(maximized ? {} : decoy.getBounds())
+  const win = createWindow(maximized ? {} : decoy.getBounds(), () => decoy.destroy())
   if (maximized) win.maximize()
-  decoy.destroy()
 })
 
 ipcMain.on('decoy:navigate', (event, input) => {
@@ -126,11 +133,21 @@ ipcMain.on('decoy:close', (event) => {
   BrowserWindow.fromWebContents(event.sender)?.close()
 })
 
-app.whenReady().then(() => {
-  protocol.handle('app', (request) => {
+app.whenReady().then(async () => {
+  // Build yangilanganda eski keshlangan index.html/assets ko'rsatilib qolmasligi uchun
+  await session.defaultSession.clearCache()
+
+  protocol.handle('app', async (request) => {
     const { pathname } = new URL(request.url)
     const filePath = resolveFilePath(pathname)
-    return net.fetch(pathToFileURL(filePath).toString())
+    const response = await net.fetch(pathToFileURL(filePath).toString())
+    const headers = new Headers(response.headers)
+    headers.set('Cache-Control', 'no-store')
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    })
   })
 
   Menu.setApplicationMenu(null)
